@@ -1,0 +1,34 @@
+[ENABLE]
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp [ebx+10],1 //They all use same addresses
+jne originalcode //If it doesn't equal to 1, goto originalcode
+fadd dword ptr [ebx+04]
+fstp dword ptr [ebp-30]
+jmp exit
+
+originalcode:
+fsubr dword ptr [ebx+04]
+fstp dword ptr [ebp-30]
+
+exit:
+jmp returnhere
+
+"Tutorial-i386.exe"+2650C:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+dealloc(newmem)
+"Tutorial-i386.exe"+2650C:
+fsubr dword ptr [ebx+04]
+fstp dword ptr [ebp-30]
+//Alt: db D8 6B 04 D9 5D D0
